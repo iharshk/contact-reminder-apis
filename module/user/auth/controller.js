@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 module.exports.signup = async function (req, res, next) {
     try {
         let password = req.body.password || null;
+        req.body.is_active = true;
         req.body.password = password ? bcrypt.hashSync(password) : null;
 
         let userDeatails = await User.findOne({ mobile: req.body.mobile });
@@ -18,6 +19,19 @@ module.exports.signup = async function (req, res, next) {
             } else {
                 sendResponse(res, true, 200, 6001);
             }
+
+        } else if (userDeatails && userDeatails.mobile == req.body.mobile && userDeatails.is_active === false) {
+
+            let query = { $set: { "is_active": true, password: req.body.password } }
+            let updateData = await User.findOneAndUpdate({ mobile: req.body.mobile }, query);
+            if (updateData) {
+                let sessionId = await createSession({ mobile: req.body.mobile });
+                let result = { sessionId: sessionId }
+                sendResponse(res, false, 200, 3001, result);
+            } else {
+                sendResponse(res, true, 200, 6001);
+            }
+
         } else {
             sendResponse(res, false, 200, 3002);
         }
@@ -30,9 +44,9 @@ module.exports.signup = async function (req, res, next) {
 module.exports.sendOtp = async function (req, res, next) {
     try {
         let mobile_no = req.query.mobile;
-        if(mobile_no && mobile_no.length >= 10) {
+        if (mobile_no && mobile_no.length >= 10) {
             let otp = Math.floor(100000 + Math.random() * 900000)
-            sendResponse(res, false, 200, 3000, {'OTP' : otp} )
+            sendResponse(res, false, 200, 3000, { 'OTP': otp })
         } else {
             sendResponse(res, true, 403, 3006)
         }

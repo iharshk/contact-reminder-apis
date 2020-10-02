@@ -5,14 +5,29 @@ var validator = require('validator');
 
 const UserSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+    },
     mobile: {
       type: Number,
       required: [true, 'Mobile Number is required.'],
     },
     password: {
       type: String,
-      required: [true, 'Password is required.']
-    }
+    },
+    email: {
+      type: String,
+      validate: {
+        validator: (email) => {
+          return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(email)
+        },
+        message: 'Email validation failed'
+      }
+    },
+    is_active: { 
+      type: Boolean,
+      default: false 
+    },
   },
   { timestamps: true }
 );
