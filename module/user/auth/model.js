@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema(
         message: 'Email validation failed'
       }
     },
-    is_active: { 
+    is_active: {
       type: Boolean,
       default: false 
     },
@@ -41,7 +41,10 @@ UserSchema.methods = {
   toJSON() {
     return {
       _id: this._id,
-      mobile: this.mobile
+      name: this.name,
+      mobile: this.mobile,
+      is_active: this.is_active,
+      email: this.email
     };
   }
 };
