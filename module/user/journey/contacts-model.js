@@ -11,7 +11,14 @@ var contactsSchema = new mongoose.Schema(
         type: Schema.Types.ObjectId,
         ref: "user"
       }
-    ]
+    ],
+    mobile: {
+      type: Number 
+    },
+    updatedDate: { 
+      type: Date, 
+      default: new Date() 
+    },
   },
   { timestamps: true }
 );
