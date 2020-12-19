@@ -6,18 +6,19 @@ var contactsSchema = new mongoose.Schema(
     user_id: {
       type: String
     },
-    email: {
-      type: String
-    },
-    mobile: {
-      type: Number
-    },
     contact_list: [
       {
         type: Schema.Types.ObjectId,
         ref: "user"
       }
-    ]
+    ],
+    mobile: {
+      type: Number 
+    },
+    updatedDate: { 
+      type: Date, 
+      default: new Date() 
+    },
   },
   { timestamps: true }
 );
